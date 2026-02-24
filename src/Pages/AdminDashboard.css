@@ -1,0 +1,88 @@
+/* MAIN WRAPPER */
+.admin-dashboard {
+  padding: 2rem;
+  min-height: 100vh;
+  background: #f5f9f8;
+  display: flex;
+  justify-content: center; /* ⭐ CENTER EVERYTHING */
+  width: 100%;
+}
+
+/* INNER CONTAINER */
+.admin-dashboard-inner {
+  width: 100%;
+  max-width: 1200px; /* ⭐ LIMIT MAX WIDTH FOR NICE CENTER */
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* spacing between sections */
+}
+
+/* TITLE */
+.admin-title {
+  text-align: center;
+  color: #0b5345;
+  font-weight: bold;
+}
+
+/* TOP CARDS */
+.stat-card {
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  cursor: pointer;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: 0.2s;
+}
+
+.stat-card:hover {
+  transform: scale(1.03);
+  background-color: #eafaf1;
+}
+
+/* COUNSELORS + CALENDAR BOX */
+.calendar-section {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.counselor-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem;
+  border-radius: 10px;
+  background: #f9f9f9;
+}
+
+.counselor-card:hover {
+  background: #e8f6f3;
+}
+
+/* SESSION LIST */
+.session-list {
+  background: #f8fdfb;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.session-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.session-list th,
+.session-list td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.session-list th {
+  background-color: #117a65;
+  color: white;
+}

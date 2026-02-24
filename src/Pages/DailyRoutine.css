@@ -1,0 +1,220 @@
+
+.page-container {
+  padding: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #222;
+}
+
+.page-title h1 { margin: 0 0 6px; font-size: 1.6rem; }
+.subtitle { margin: 0 0 18px; color: #555; }
+
+/* grid */
+.grid-two {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 18px;
+}
+@media (max-width: 880px) {
+  .grid-two { grid-template-columns: 1fr; }
+}
+
+/* cards */
+.daily-routine-card {
+  background: #fff;
+  border: 1px solid rgba(20,20,30,0.06);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(20,20,30,0.04);
+}
+
+/* calendar */
+.calendar-header {
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.today-badge {
+  text-align: right;
+}
+.today-day { font-weight:600; font-size:0.95rem; }
+.today-date { font-size:0.78rem; color:#666; }
+
+.calendar-tip { display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+.tip-emoji { font-size:42px; }
+.tip-title { margin:0; font-size:1rem; }
+.tip-text { margin:4px 0 0; color:#444; }
+
+/* week grid */
+.week-grid { display:flex; gap:8px; margin-top:12px; }
+.week-cell {
+  width:46px; text-align:center; padding:8px; border-radius:8px;
+  background: linear-gradient(180deg,#fafafa,#fff);
+  border: 1px solid rgba(20,20,30,0.04);
+}
+.week-cell-today { background: linear-gradient(180deg,#fffbf0,#fff7ea); border-color: #ffd6a5; box-shadow: 0 1px 6px rgba(255,180,80,0.12); }
+.week-day { font-size:0.75rem; color:#666; }
+.week-num { font-weight:600; margin-top:6px; }
+
+/* todo */
+.todo-form { display:flex; gap:8px; margin-bottom:12px; }
+.todo-input {
+  flex:1; padding:10px 12px; border-radius:8px; border:1px solid #e6e6e9; outline:none;
+}
+.todo-input:focus { box-shadow:0 0 0 3px rgba(100,150,255,0.06); border-color:#bcd3ff; }
+.btn { border-radius:8px; border:0; padding:8px 12px; cursor:pointer; }
+.btn-primary { background:#4f46e5; color:#fff; }
+.btn-link { background:transparent; color:#888; border:0; padding:4px 6px; cursor:pointer; }
+
+/* todo list items */
+.todo-list { list-style:none; margin:0; padding:0; max-height:360px; overflow:auto; }
+.todo-item {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:8px 6px; border-bottom:1px dashed rgba(0,0,0,0.03);
+}
+.todo-item label { display:flex; gap:8px; align-items:center; }
+.todo-text { margin-left:6px; }
+.todo-item.done .todo-text { text-decoration:line-through; color:#888; opacity:0.8; }
+
+.todo-empty { color:#666; padding:12px 6px; }
+
+/* small helpers */
+.btn-delete { background:transparent; border:0; color:#c0392b; font-size:14px; }
+
+/* --- Interactive month calendar styles --- */
+.interactive-calendar .month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.grid-head {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  padding-bottom: 6px;
+  opacity: 0.95;
+}
+
+.day-cell {
+  background: linear-gradient(180deg,#ffffff,#fbfbff);
+  border: 1px solid rgba(20,20,30,0.05);
+  border-radius: 10px;
+  padding: 8px;
+  height: 86px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.day-cell:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(18,23,60,0.06); }
+
+.day-cell.out-month { opacity: 0.45; }
+.day-cell.in-month { opacity: 1; }
+
+.day-top { display:flex; justify-content:space-between; align-items:center; }
+.day-num { font-weight:700; font-size:1rem; }
+.note-dot {
+  width:8px;height:8px;border-radius:50%;background:#ff7aa2;box-shadow:0 1px 6px rgba(255,122,162,0.18);
+}
+
+.day-tip { text-align:right; font-size:18px; opacity:0.95; }
+.day-emoji { display:inline-block; transform:translateY(2px); }
+
+.today-cell {
+  border: 1px solid rgba(255, 180, 80, 0.2);
+  background: linear-gradient(180deg,#fff7ea,#fffef9);
+}
+
+/* buttons */
+.mini-btn {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.mini-btn:hover { background: rgba(0,0,0,0.03); transform: translateY(-2px); }
+
+.btn-primary {
+  background: #4f46e5;
+  color: #fff;
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-link {
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+}
+
+/* modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 12, 34, 0.4);
+  z-index: 9999;
+  padding: 16px;
+}
+.modal-card {
+  width: 100%;
+  max-width: 640px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 20px 60px rgba(6,12,34,0.15);
+}
+
+/* Study Planner styles */
+.page-container { padding: 20px; }
+.page-title h1 { font-size: 1.4rem; }
+
+.month-grid { gap: 8px; }
+
+/* ensure small papers don't overflow */
+.paper-small { overflow: auto; }
+
+/* Mindful Breathing Circle Animation */
+.breathing-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #b3e5fc, #4fc3f7);
+  transition: all 4s ease-in-out;
+}
+
+.breathing-circle.inhale {
+  transform: scale(1.3);
+  background: radial-gradient(circle at center, #bbdefb, #64b5f6);
+}
+
+.breathing-circle.hold {
+  transform: scale(1.45);
+  background: radial-gradient(circle at center, #e3f2fd, #90caf9);
+  transition: all 2s ease-in-out;
+}
+
+.breathing-circle.exhale {
+  transform: scale(0.85);
+  background: radial-gradient(circle at center, #b2ebf2, #4dd0e1);
+  transition: all 6s ease-in-out;
+}
+
+/* Events & Workshops page tweaks */
+.events-hero {
+  display:flex; align-items:center; gap:12px;
+}
+.events-card .MuiPaper-root {
+  border-radius: 12px;
+}

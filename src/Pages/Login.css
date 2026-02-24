@@ -1,0 +1,208 @@
+/* ---------- PAGE BACKGROUND ---------- */
+.login-page-outer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(135deg, #dff9f6 0%, #f7fffe 100%);
+  padding: 32px;
+  animation: fadeIn 0.8s ease;
+}
+
+/* ---------- GLASS CARD ---------- */
+.login-card {
+  width: 550px;
+  padding: 32px 30px;
+  border-radius: 28px;
+
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow: 0 20px 40px rgba(16, 79, 75, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  animation: floatIn 0.7s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 28px 55px rgba(16, 79, 75, 0.18);
+}
+
+/* ---------- TITLE ---------- */
+.login-title {
+  text-align: center;
+  color: #0f766e;
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+/* ---------- TABS ---------- */
+.role-tabs {
+  margin: 8px 0 12px 0;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 6px;
+}
+
+.role-tabs .MuiTab-root {
+  text-transform: none;
+  font-weight: 700;
+  min-width: 140px;
+  border-radius: 14px;
+  transition: 0.25s ease;
+}
+
+.role-tabs .MuiTab-root.Mui-selected {
+  background: #0f766e;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(15, 118, 110, 0.3);
+}
+
+/* ---------- FORM ---------- */
+.login-form {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ---------- INPUT FIELDS ---------- */
+.login-input .MuiInputBase-root {
+  border-radius: 22px !important;
+  background: #f1fbfa !important;
+  transition: 0.25s ease;
+  border: 1px solid transparent;
+}
+
+.login-input .MuiInputBase-root:hover {
+  border: 1px solid #0f766e60;
+}
+
+.login-input .MuiInputBase-root.Mui-focused {
+  border: 1px solid #0f766e;
+  background: white;
+}
+
+/* ---------- LOGIN BUTTON ---------- */
+.login-button {
+  border-radius: 25px !important;
+  background: linear-gradient(135deg, #0f766e, #14b8a6) !important;
+  padding: 12px 20px !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 14px rgba(15, 118, 110, 0.25);
+  transition: 0.3s ease;
+}
+
+.login-button:hover {
+  background: linear-gradient(135deg, #159a8b, #10b39c) !important;
+  transform: translateY(-1px);
+}
+
+/* ---------- DEMO BUTTONS ---------- */
+.login-card .MuiButton-root.MuiOutlinedButton-root {
+  border-radius: 20px;
+  text-transform: none;
+  border-color: #0f766e99;
+  color: #0f766e;
+  font-weight: 600;
+}
+
+.login-card .MuiButton-root.MuiOutlinedButton-root:hover {
+  background: #e1faf6;
+  border-color: #0f766e;
+}
+
+.login-card .MuiButton-root.MuiTextButton-root {
+  text-transform: none;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* ---------- CAPTCHA ---------- */
+.captcha-box {
+  background: linear-gradient(135deg, #e6fffa, #c7fff4);
+  padding: 10px 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 800;
+  font-size: 22px;
+  color: #0f766e;
+  letter-spacing: 3px;
+  user-select: none;
+  border: 1px solid #0f766e20;
+  box-shadow: inset 0 0 10px rgba(15, 118, 110, 0.15);
+}
+
+.captcha-refresh {
+  border: none;
+  background: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #0f766e;
+  font-weight: 800;
+  transition: 0.2s ease;
+}
+
+.captcha-refresh:hover {
+  transform: scale(1.2) rotate(10deg);
+}
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes floatIn {
+  0% { opacity: 0; transform: translateY(15px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 720px) {
+  .login-card {
+    width: 92%;
+    padding: 22px;
+  }
+  .role-tabs .MuiTab-root {
+    min-width: 90px;
+    font-size: 13px;
+  }
+}
+/* NEW ROLE SELECTOR */
+.role-selector {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 10px 0 20px 0;
+}
+
+.role-btn {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid #0f766e70;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+  color: #0f766e;
+  transition: 0.25s ease;
+}
+
+.role-btn:hover {
+  background: #e8fdf9;
+}
+
+.active-role {
+  background: #0f766e !important;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(15, 118, 110, 0.3);
+}
