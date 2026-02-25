@@ -1,4 +1,3 @@
-// src/Pages/StudentDashboard.jsx
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -13,34 +12,26 @@ import { Link } from "react-router-dom";
 
 export default function StudentDashboard() {
 
-  // sessions state
   const [sessions, setSessions] = useState([]);
 
-  // load sessions from localStorage
   useEffect(() => {
+
+    // MUST match AdminSessions key exactly
     const stored =
-      JSON.parse(localStorage.getItem("counsellingSessions")) ||
-      JSON.parse(localStorage.getItem("sessions")) ||
-      [];
+      JSON.parse(localStorage.getItem("counsellingSessions")) || [];
 
-    setSessions(stored);
+    // optional: filter only current student
+    const auth =
+      JSON.parse(localStorage.getItem("swell_auth_v1")) || {};
+
+    const studentSessions =
+      stored.filter(
+        s => s.student === auth.username || !auth.username
+      );
+
+    setSessions(studentSessions);
+
   }, []);
-
-
-  function getStatusColor(status) {
-    switch (status) {
-      case "Scheduled":
-        return "primary";
-      case "Completed":
-        return "success";
-      case "Cancelled":
-        return "error";
-      case "Follow-up":
-        return "warning";
-      default:
-        return "default";
-    }
-  }
 
 
   return (
@@ -49,62 +40,50 @@ export default function StudentDashboard() {
       {/* TOP CARDS */}
       <Grid container spacing={4} mb={4}>
 
-        {/* Well-being */}
+        {/* WELL BEING */}
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
-            <Stack direction="row" spacing={2} alignItems="center" mb={1}>
-              <Typography fontSize="28px">🧘</Typography>
-              <Typography variant="h6" fontWeight={700}>
-                Well-being Overview
-              </Typography>
-            </Stack>
+            <Typography fontWeight={700} fontSize={20} mb={1}>
+              🧘 Well-being Overview
+            </Typography>
 
-            <Typography color="text.secondary" mb={2}>
-              Stay balanced with routines that support your mental and physical health.
+            <Typography mb={2}>
+              Stay balanced with routines that support your health.
             </Typography>
 
             <Button
               component={Link}
               to="/daily-routine"
               variant="contained"
-              sx={{
-                backgroundColor: "#16A34A",
-                textTransform: "none",
-                fontWeight: 600
-              }}
+              sx={{ backgroundColor: "#16A34A" }}
             >
               View Daily Routine
             </Button>
+
           </Paper>
         </Grid>
 
 
-        {/* Counselor Connect */}
+        {/* BOOK SESSION */}
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
-            <Stack direction="row" spacing={2} alignItems="center" mb={1}>
-              <Typography fontSize="28px">👩‍⚕️</Typography>
-              <Typography variant="h6" fontWeight={700}>
-                Counselor Connect
-              </Typography>
-            </Stack>
+            <Typography fontWeight={700} fontSize={20} mb={1}>
+              👩‍⚕️ Counselor Connect
+            </Typography>
 
-            <Typography color="text.secondary" mb={2}>
-              Book a confidential session with campus wellness counselors.
+            <Typography mb={2}>
+              Book and track your counselling sessions.
             </Typography>
 
             <Button
               component={Link}
               to="/connect"
               variant="contained"
-              sx={{
-                backgroundColor: "#3b82f6",
-                textTransform: "none",
-                fontWeight: 600
-              }}
+              sx={{ backgroundColor: "#2563eb" }}
             >
               Book Session
             </Button>
+
           </Paper>
         </Grid>
 
@@ -112,72 +91,74 @@ export default function StudentDashboard() {
 
 
 
-      {/* MY SESSIONS SECTION */}
-      <Paper sx={{ p: 4, mb: 4, borderRadius: 3 }}>
+      {/* SESSION STATUS */}
+      <Paper sx={{ p: 3, mb: 4, borderRadius: 3 }}>
 
-        <Typography variant="h5" fontWeight={700} mb={3}>
+        <Typography variant="h5" fontWeight={700} mb={2}>
           My Counselling Sessions
         </Typography>
 
-        {sessions.length === 0 ? (
 
+        {sessions.length === 0 && (
           <Typography color="text.secondary">
-            No sessions booked yet.
+            No sessions yet
           </Typography>
-
-        ) : (
-
-          <Grid container spacing={2}>
-            {sessions.map((s, index) => (
-
-              <Grid item xs={12} md={6} key={index}>
-
-                <Paper
-                  sx={{
-                    p: 3,
-                    borderRadius: 2,
-                    border: "1px solid #e5e7eb"
-                  }}
-                >
-
-                  <Typography fontWeight={600}>
-                    Concern: {s.concern || "-"}
-                  </Typography>
-
-                  <Typography>
-                    Date: {s.date || "-"}
-                  </Typography>
-
-                  <Typography>
-                    Counsellor: {s.counsellor || "Not assigned yet"}
-                  </Typography>
-
-                  <Box mt={1}>
-                    <Chip
-                      label={s.status || "Requested"}
-                      color={getStatusColor(s.status)}
-                    />
-                  </Box>
-
-                </Paper>
-
-              </Grid>
-
-            ))}
-          </Grid>
-
         )}
+
+
+        {sessions.map((s, index) => (
+
+          <Paper
+            key={index}
+            sx={{
+              p: 2,
+              mb: 2,
+              borderRadius: 3,
+              border: "1px solid #e5e7eb"
+            }}
+          >
+
+            <Typography fontWeight={600}>
+              Concern: {s.concern}
+            </Typography>
+
+            <Typography>
+              Date: {s.date}
+            </Typography>
+
+            <Typography>
+              Counselor:
+              {" "}
+              {s.counsellor && s.counsellor.trim() !== ""
+                ? s.counsellor
+                : "Not assigned yet"}
+            </Typography>
+
+
+            <Chip
+              label={s.status}
+              sx={{
+                mt: 1,
+                backgroundColor: "#0f766e",
+                color: "white"
+              }}
+            />
+
+          </Paper>
+
+        ))}
 
       </Paper>
 
 
 
       {/* RESOURCES */}
-      <Paper sx={{ p: 4, borderRadius: 3 }}>
+      <Paper sx={{ p: 3, borderRadius: 3 }}>
 
         <Typography variant="h5" fontWeight={700} mb={3}>
           Wellness Resources
         </Typography>
+
 
         <Grid container spacing={3}>
 
@@ -187,20 +168,12 @@ export default function StudentDashboard() {
               to="/study-planner"
               sx={{
                 p: 3,
-                height: 120,
-                border: "2px solid #d1d5db",
-                borderRadius: 2,
-                textDecoration: "none",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                "&:hover": { boxShadow: 4 }
+                textAlign: "center",
+                border: "2px solid #e5e7eb",
+                textDecoration: "none"
               }}
             >
-              <Typography fontWeight={600}>
-                📚 Study Planner
-              </Typography>
+              📚 Study Planner
             </Paper>
           </Grid>
 
@@ -211,20 +184,12 @@ export default function StudentDashboard() {
               to="/mindful-breathing"
               sx={{
                 p: 3,
-                height: 120,
-                border: "2px solid #d1d5db",
-                borderRadius: 2,
-                textDecoration: "none",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                "&:hover": { boxShadow: 4 }
+                textAlign: "center",
+                border: "2px solid #e5e7eb",
+                textDecoration: "none"
               }}
             >
-              <Typography fontWeight={600}>
-                💗 Mindful Breathing
-              </Typography>
+              💗 Mindful Breathing
             </Paper>
           </Grid>
 
@@ -235,20 +200,12 @@ export default function StudentDashboard() {
               to="/sleep-hygiene"
               sx={{
                 p: 3,
-                height: 120,
-                border: "2px solid #d1d5db",
-                borderRadius: 2,
-                textDecoration: "none",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                "&:hover": { boxShadow: 4 }
+                textAlign: "center",
+                border: "2px solid #e5e7eb",
+                textDecoration: "none"
               }}
             >
-              <Typography fontWeight={600}>
-                😴 Sleep Hygiene
-              </Typography>
+              😴 Sleep Hygiene
             </Paper>
           </Grid>
 
@@ -259,27 +216,19 @@ export default function StudentDashboard() {
               to="/nutrition-basics"
               sx={{
                 p: 3,
-                height: 120,
-                border: "2px solid #d1d5db",
-                borderRadius: 2,
-                textDecoration: "none",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                "&:hover": { boxShadow: 4 }
+                textAlign: "center",
+                border: "2px solid #e5e7eb",
+                textDecoration: "none"
               }}
             >
-              <Typography fontWeight={600}>
-                🥗 Nutrition Basics
-              </Typography>
+              🥗 Nutrition Basics
             </Paper>
           </Grid>
+
 
         </Grid>
 
       </Paper>
-
 
     </Box>
   );
