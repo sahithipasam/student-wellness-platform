@@ -1,4 +1,4 @@
-```jsx
+
 import React from "react";
 import {
   Box,
@@ -208,4 +208,4 @@ export default function StudentDashboard() {
     </Box>
   );
 }
-```
+
