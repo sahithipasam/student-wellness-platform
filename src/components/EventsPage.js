@@ -1,111 +1,220 @@
-import React from "react";
-import { Card, CardContent, Typography, Button, Box } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Paper,
+  Typography,
+  Stack,
+  Grid,
+  Button,
+  TextField,
+  Divider,
+  Chip
+} from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import RoomIcon from "@mui/icons-material/Room";
 
-const EventCard = ({ title, description, date, time, location }) => {
+import "../Pages/DailyRoutine.css";
 
-  const handleRegister = () => {
-    const newEvent = { title, date, time, location };
+function loadEvents() {
 
-    const saved = JSON.parse(localStorage.getItem("registeredEvents")) || [];
+  const stored = JSON.parse(localStorage.getItem("adminEvents"));
 
-    const exists = saved.some((e) => e.title === title);
-    if (exists) {
-      alert("You have already registered for this event!");
-      return;
+  if (stored && stored.length > 0) {
+    return stored;
+  }
+
+  return [];
+}
+
+export default function EventsPage() {
+
+  const [events, setEvents] = useState([]);
+  const [query, setQuery] = useState("");
+  const [registered, setRegistered] = useState({});
+
+  useEffect(() => {
+
+    setEvents(loadEvents());
+
+    const saved =
+      JSON.parse(localStorage.getItem("registeredEvents")) || {};
+
+    setRegistered(saved);
+
+  }, []);
+
+  useEffect(() => {
+
+    localStorage.setItem(
+      "registeredEvents",
+      JSON.stringify(registered)
+    );
+
+  }, [registered]);
+
+
+  function toggleRegistration(id) {
+
+    const updated = { ...registered };
+
+    if (updated[id]) {
+      delete updated[id];
+    }
+    else {
+      updated[id] = true;
     }
 
-    saved.push(newEvent);
-    localStorage.setItem("registeredEvents", JSON.stringify(saved));
+    setRegistered(updated);
+  }
 
-    alert("✅ Registered Successfully!");
-  };
+
+  const visible = events.filter(ev =>
+    ev.title?.toLowerCase().includes(query.toLowerCase())
+  );
+
 
   return (
-    <Card
-      sx={{
-        borderRadius: 4,
-        boxShadow: "0 4px 10px rgba(0,0,0,0.10)",
-        p: 2,
-        width: 350,
-        minHeight: 300,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        backgroundColor: "white",
-      }}
-    >
-      <CardContent sx={{ pb: 1 }}>
-        
-        {/* Title */}
-        <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
-          {title}
-        </Typography>
 
-        {/* Description */}
-        <Typography sx={{ color: "gray", mb: 2 }}>
-          {description}
-        </Typography>
+    <Box sx={{ maxWidth: 1200, margin: "0 auto", padding: 3 }}>
 
-        {/* ✅ Date + Time Row (Fixed alignment) */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            mb: 1,
-            flexWrap: "nowrap",
-          }}
-        >
-          <CalendarTodayIcon fontSize="small" color="primary" />
-          <Typography sx={{ whiteSpace: "nowrap" }}>{date}</Typography>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ mb: 3 }}
+      >
 
-          <AccessTimeIcon fontSize="small" sx={{ ml: 2 }} />
-          <Typography sx={{ whiteSpace: "nowrap" }}>{time}</Typography>
-        </Box>
+        <Box>
 
-        {/* ✅ Location Row (Fixed alignment) */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          <RoomIcon fontSize="small" color="error" />
-          <Typography sx={{ whiteSpace: "nowrap" }}>
-            {location}
+          <Typography variant="h4" fontWeight={700}>
+            Events & Workshops
           </Typography>
+
+          <Typography color="text.secondary">
+            Discover campus events
+          </Typography>
+
         </Box>
 
-      </CardContent>
 
-      {/* Register Button */}
-      <Box sx={{ mt: 2 }}>
-        <Button
-          variant="outlined"
-          onClick={handleRegister}
-          sx={{
-            borderRadius: 2,
-            fontWeight: "bold",
-            color: "#0f766e",
-            borderColor: "#0f766e",
-            "&:hover": {
-              backgroundColor: "#e0f2f1",
-              borderColor: "#0f766e",
-            },
-          }}
-        >
-          Register
-        </Button>
-      </Box>
-    </Card>
+        <TextField
+          size="small"
+          placeholder="Search events..."
+          value={query}
+          onChange={(e) =>
+            setQuery(e.target.value)
+          }
+        />
+
+      </Stack>
+
+
+      <Divider sx={{ mb: 3 }} />
+
+
+      {visible.length === 0 ?
+
+        (
+          <Typography>
+            No events available
+          </Typography>
+        )
+
+        :
+
+        (
+
+          <Grid container spacing={3}>
+
+            {visible.map(ev => (
+
+              <Grid item xs={12} md={6} lg={4} key={ev.id}>
+
+                <Paper sx={{ p: 3 }}>
+
+                  <Stack spacing={1}>
+
+                    <Stack direction="row" spacing={1} alignItems="center">
+
+                      <CalendarTodayIcon />
+
+                      <Typography fontWeight={700}>
+                        {ev.title}
+                      </Typography>
+
+                      <Chip
+                        label={ev.type || "Event"}
+                        size="small"
+                        sx={{ marginLeft: "auto" }}
+                      />
+
+                    </Stack>
+
+
+                    <Typography>
+                      👤 Organizer: {ev.organizer}
+                    </Typography>
+
+
+                    <Typography color="text.secondary">
+                      📅 {ev.date}
+                    </Typography>
+
+
+                    <Typography color="text.secondary">
+                      🕒 {ev.time}
+                    </Typography>
+
+
+                    <Typography color="text.secondary">
+                      📍 {ev.venue}
+                    </Typography>
+
+
+                    <Typography>
+                      {ev.description}
+                    </Typography>
+
+
+                    <Button
+
+                      variant={
+                        registered[ev.id]
+                          ? "outlined"
+                          : "contained"
+                      }
+
+                      color={
+                        registered[ev.id]
+                          ? "error"
+                          : "primary"
+                      }
+
+                      onClick={() =>
+                        toggleRegistration(ev.id)
+                      }
+
+                    >
+                      {
+                        registered[ev.id]
+                          ? "Cancel Registration"
+                          : "Register"
+                      }
+
+                    </Button>
+
+
+                  </Stack>
+
+                </Paper>
+
+              </Grid>
+
+            ))}
+
+          </Grid>
+
+        )}
+
+    </Box>
   );
-};
-
-export default EventCard;
+}
