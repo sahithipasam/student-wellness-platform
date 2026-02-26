@@ -1,10 +1,10 @@
-// src/Pages/StudentDashboard.jsx
 import React, { useEffect, useState } from "react";
 import {
   Box,
   Paper,
   Typography,
   Button,
+  Stack,
   Grid,
   Chip
 } from "@mui/material";
@@ -15,17 +15,24 @@ export default function StudentDashboard() {
   const [sessions, setSessions] = useState([]);
 
   useEffect(() => {
+
+    // MUST match AdminSessions key exactly
     const stored =
       JSON.parse(localStorage.getItem("counsellingSessions")) || [];
 
+    // optional: filter only current student
     const auth =
-      JSON.parse(localStorage.getItem("swell_auth_v1"));
+      JSON.parse(localStorage.getItem("swell_auth_v1")) || {};
 
-    const filtered =
-      stored.filter(s => s.student === auth?.username);
+    const studentSessions =
+      stored.filter(
+        s => s.student === auth.username || !auth.username
+      );
 
-    setSessions(filtered);
+    setSessions(studentSessions);
+
   }, []);
+
 
   return (
     <Box sx={{ maxWidth: 1200, mx: "auto" }}>
@@ -33,76 +40,125 @@ export default function StudentDashboard() {
       {/* TOP CARDS */}
       <Grid container spacing={4} mb={4}>
 
+        {/* WELL BEING */}
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3 }}>
-            <Typography fontWeight={700}>
+          <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
+            <Typography fontWeight={700} fontSize={20} mb={1}>
               🧘 Well-being Overview
             </Typography>
+
+            <Typography mb={2}>
+              Stay balanced with routines that support your health.
+            </Typography>
+
             <Button
               component={Link}
               to="/daily-routine"
               variant="contained"
-              sx={{ mt: 2 }}
+              sx={{ backgroundColor: "#16A34A" }}
             >
               View Daily Routine
             </Button>
+
           </Paper>
         </Grid>
 
+
+        {/* BOOK SESSION */}
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3 }}>
-            <Typography fontWeight={700}>
+          <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
+            <Typography fontWeight={700} fontSize={20} mb={1}>
               👩‍⚕️ Counselor Connect
             </Typography>
+
+            <Typography mb={2}>
+              Book and track your counselling sessions.
+            </Typography>
+
             <Button
               component={Link}
               to="/connect"
               variant="contained"
-              sx={{ mt: 2 }}
+              sx={{ backgroundColor: "#2563eb" }}
             >
               Book Session
             </Button>
+
           </Paper>
         </Grid>
 
       </Grid>
 
 
-      {/* MY SESSIONS */}
-      <Paper sx={{ p: 3, mb: 4 }}>
-        <Typography variant="h5" mb={2}>
+
+      {/* SESSION STATUS */}
+      <Paper sx={{ p: 3, mb: 4, borderRadius: 3 }}>
+
+        <Typography variant="h5" fontWeight={700} mb={2}>
           My Counselling Sessions
         </Typography>
 
-        {sessions.length === 0 ? (
-          <Typography>No sessions yet</Typography>
-        ) : (
-          sessions.map((s, i) => (
-            <Paper key={i} sx={{ p: 2, mb: 2 }}>
-              <Typography>
-                Concern: {s.concern}
-              </Typography>
-              <Typography>
-                Date: {s.date}
-              </Typography>
-              <Typography>
-                Counselor: {s.counsellor || "Not assigned yet"}
-              </Typography>
-              <Chip
-                label={s.status}
-                sx={{ mt: 1 }}
-              />
-            </Paper>
-          ))
+
+        {sessions.length === 0 && (
+          <Typography color="text.secondary">
+            No sessions yet
+          </Typography>
         )}
+
+
+        {sessions.map((s, index) => (
+
+          <Paper
+            key={index}
+            sx={{
+              p: 2,
+              mb: 2,
+              borderRadius: 3,
+              border: "1px solid #e5e7eb"
+            }}
+          >
+
+            <Typography fontWeight={600}>
+              Concern: {s.concern}
+            </Typography>
+
+            <Typography>
+              Date: {s.date}
+            </Typography>
+
+            <Typography>
+              Counselor:
+              {" "}
+              {s.counsellor && s.counsellor.trim() !== ""
+                ? s.counsellor
+                : "Not assigned yet"}
+            </Typography>
+
+
+            <Chip
+              label={s.status}
+              sx={{
+                mt: 1,
+                backgroundColor: "#0f766e",
+                color: "white"
+              }}
+            />
+
+          </Paper>
+
+        ))}
+
       </Paper>
 
 
-      {/* WELLNESS RESOURCES (LEFT ALIGNED) */}
-      <Paper sx={{ p: 3 }}>
-        <Typography variant="h5" mb={3}>
+
+      {/* RESOURCES */}
+      <Paper sx={{ p: 3, borderRadius: 3 }}>
+
+        <Typography variant="h5" fontWeight={700} mb={3}>
           Wellness Resources
         </Typography>
+
 
         <Grid container spacing={3}>
 
@@ -111,8 +167,9 @@ export default function StudentDashboard() {
               component={Link}
               to="/study-planner"
               sx={{
-                p: 2,
-                border: "1px solid #ddd",
+                p: 3,
+                textAlign: "center",
+                border: "2px solid #e5e7eb",
                 textDecoration: "none"
               }}
             >
@@ -120,13 +177,15 @@ export default function StudentDashboard() {
             </Paper>
           </Grid>
 
+
           <Grid item xs={6} sm={3}>
             <Paper
               component={Link}
               to="/mindful-breathing"
               sx={{
-                p: 2,
-                border: "1px solid #ddd",
+                p: 3,
+                textAlign: "center",
+                border: "2px solid #e5e7eb",
                 textDecoration: "none"
               }}
             >
@@ -134,13 +193,15 @@ export default function StudentDashboard() {
             </Paper>
           </Grid>
 
+
           <Grid item xs={6} sm={3}>
             <Paper
               component={Link}
               to="/sleep-hygiene"
               sx={{
-                p: 2,
-                border: "1px solid #ddd",
+                p: 3,
+                textAlign: "center",
+                border: "2px solid #e5e7eb",
                 textDecoration: "none"
               }}
             >
@@ -148,13 +209,15 @@ export default function StudentDashboard() {
             </Paper>
           </Grid>
 
+
           <Grid item xs={6} sm={3}>
             <Paper
               component={Link}
               to="/nutrition-basics"
               sx={{
-                p: 2,
-                border: "1px solid #ddd",
+                p: 3,
+                textAlign: "center",
+                border: "2px solid #e5e7eb",
                 textDecoration: "none"
               }}
             >
@@ -162,7 +225,9 @@ export default function StudentDashboard() {
             </Paper>
           </Grid>
 
+
         </Grid>
+
       </Paper>
 
     </Box>
