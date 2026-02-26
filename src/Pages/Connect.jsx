@@ -41,6 +41,9 @@ export default function Connect() {
       JSON.stringify(updated)
     );
 
+    // Trigger custom event to notify other components
+    window.dispatchEvent(new Event("counsellingSessions:updated"));
+
     alert("Session request submitted!");
     setConcern("");
     setDate("");

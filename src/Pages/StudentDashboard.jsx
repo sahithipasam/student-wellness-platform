@@ -14,23 +14,38 @@ export default function StudentDashboard() {
 
   const [sessions, setSessions] = useState([]);
 
-  useEffect(() => {
-
-    // MUST match AdminSessions key exactly
+  const fetchSessions = () => {
     const stored =
       JSON.parse(localStorage.getItem("counsellingSessions")) || [];
 
-    // optional: filter only current student
     const auth =
       JSON.parse(localStorage.getItem("swell_auth_v1")) || {};
 
     const studentSessions =
       stored.filter(
-        s => s.student === auth.username || !auth.username
+        s => s.student === auth.username
       );
 
     setSessions(studentSessions);
+  };
 
+  useEffect(() => {
+    fetchSessions();
+  }, []);
+
+  // Listen for updates to sessions from AdminSessions
+  useEffect(() => {
+    const handleSessionUpdate = () => {
+      fetchSessions();
+    };
+
+    window.addEventListener("counsellingSessions:updated", handleSessionUpdate);
+    window.addEventListener("storage", handleSessionUpdate);
+
+    return () => {
+      window.removeEventListener("counsellingSessions:updated", handleSessionUpdate);
+      window.removeEventListener("storage", handleSessionUpdate);
+    };
   }, []);
 
 
