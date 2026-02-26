@@ -1,182 +1,111 @@
+// src/Pages/AdminSessions.jsx
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Typography,
   Paper,
+  Typography,
   TextField,
-  FormControl,
   Select,
   MenuItem,
-  IconButton,
+  IconButton
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const AdminSessions = () => {
+export default function AdminSessions() {
+
   const [sessions, setSessions] = useState([]);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("sessions")) || [];
+    const stored =
+      JSON.parse(localStorage.getItem("counsellingSessions")) || [];
     setSessions(stored);
   }, []);
 
-  const updateSessions = (updated) => {
+  function updateStorage(updated) {
     setSessions(updated);
-    localStorage.setItem("sessions", JSON.stringify(updated));
-  };
-
-  const handleStatusChange = (id, newStatus) => {
-    const updated = sessions.map((s) =>
-      s.id === id ? { ...s, status: newStatus } : s
+    localStorage.setItem(
+      "counsellingSessions",
+      JSON.stringify(updated)
     );
-    updateSessions(updated);
-  };
+  }
 
-  const handleCounsellorChange = (id, counselorName) => {
-    const updated = sessions.map((s) =>
-      s.id === id ? { ...s, counselor: counselorName } : s
-    );
-    updateSessions(updated);
-  };
+  function handleCounsellorChange(index, value) {
+    const updated = [...sessions];
+    updated[index].counsellor = value;
+    updateStorage(updated);
+  }
 
-  const handleDelete = (id) => {
-    const updated = sessions.filter((s) => s.id !== id);
-    updateSessions(updated);
-  };
+  function handleStatusChange(index, value) {
+    const updated = [...sessions];
+    updated[index].status = value;
+    updateStorage(updated);
+  }
+
+  function handleDelete(index) {
+    const updated = sessions.filter((_, i) => i !== index);
+    updateStorage(updated);
+  }
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "linear-gradient(to bottom right, #e8f6f3, #f5fffd)",
-        display: "flex",
-        justifyContent: "center",
-        p: 3,
-      }}
-    >
-      <Box sx={{ width: "100%", maxWidth: 1100 }}>
-        <Typography
-          variant="h4"
-          sx={{ fontWeight: 900, color: "#064e3b", mb: 1 }}
-        >
-          Manage Counselling Sessions 🛠️
-        </Typography>
-        <Typography sx={{ mb: 3, color: "#555" }}>
-          Review student requests, assign counsellors, and manage session
-          statuses. Changes are reflected for both students and counsellors.
-        </Typography>
+    <Box sx={{ maxWidth: 1100, mx: "auto", mt: 4 }}>
 
-        <Paper
-          sx={{
-            p: 3,
-            borderRadius: 3,
-            background: "#ffffff",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
-          }}
-        >
-          {sessions.length === 0 ? (
-            <Typography>No counselling requests yet.</Typography>
-          ) : (
-            <Box
-              component="table"
-              sx={{
-                width: "100%",
-                borderCollapse: "collapse",
-                "& th, & td": {
-                  border: "1px solid #ddd",
-                  padding: "10px",
-                  verticalAlign: "top",
-                  fontSize: "0.9rem",
-                },
-                "& th": {
-                  backgroundColor: "#0f766e",
-                  color: "#fff",
-                  textAlign: "center",
-                },
-              }}
+      <Typography variant="h4" mb={3}>
+        Manage Counselling Sessions
+      </Typography>
+
+      <Paper sx={{ p: 3, borderRadius: 3 }}>
+
+        {sessions.length === 0 && (
+          <Typography>No session requests</Typography>
+        )}
+
+        {sessions.map((s, index) => (
+
+          <Box
+            key={index}
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr",
+              gap: 2,
+              alignItems: "center",
+              mb: 2
+            }}
+          >
+
+            <Typography>{s.student}</Typography>
+            <Typography>{s.concern}</Typography>
+
+            <TextField
+              value={s.counsellor}
+              placeholder="Assign counsellor"
+              onChange={(e) =>
+                handleCounsellorChange(index, e.target.value)
+              }
+            />
+
+            <Select
+              value={s.status}
+              onChange={(e) =>
+                handleStatusChange(index, e.target.value)
+              }
             >
-              <thead>
-                <tr>
-                  <th>Student</th>
-                  <th>Email</th>
-                  <th>Date</th>
-                  <th>Concern</th>
-                  <th>Counsellor</th>
-                  <th>Status</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
+              <MenuItem value="Requested">Requested</MenuItem>
+              <MenuItem value="Scheduled">Scheduled</MenuItem>
+              <MenuItem value="Completed">Completed</MenuItem>
+              <MenuItem value="Cancelled">Cancelled</MenuItem>
+              <MenuItem value="Follow-up">Follow-up</MenuItem>
+            </Select>
 
-              <tbody>
-                {sessions.map((s) => (
-                  <tr key={s.id}>
-                    <td>
-                      {s.name}
-                      {s.rollNumber && (
-                        <div style={{ fontSize: "0.8rem", color: "#555" }}>
-                          Roll: {s.rollNumber}
-                        </div>
-                      )}
-                    </td>
-                    <td>{s.email}</td>
-                    <td>{s.date || "-"}</td>
-                    <td>
-                      <div>{s.concern}</div>
-                      {s.details && (
-                        <div
-                          style={{
-                            fontSize: "0.8rem",
-                            color: "#555",
-                            marginTop: "4px",
-                          }}
-                        >
-                          {s.details}
-                        </div>
-                      )}
-                    </td>
-                    <td style={{ minWidth: 170 }}>
-                      <TextField
-                        size="small"
-                        fullWidth
-                        placeholder="Type counsellor name"
-                        value={s.counselor || ""}
-                        onChange={(e) =>
-                          handleCounsellorChange(s.id, e.target.value)
-                        }
-                      />
-                    </td>
-                    <td style={{ minWidth: 150 }}>
-                      <FormControl fullWidth size="small">
-                        <Select
-                          value={s.status || "Requested"}
-                          onChange={(e) =>
-                            handleStatusChange(s.id, e.target.value)
-                          }
-                        >
-                          <MenuItem value="Requested">Requested</MenuItem>
-                          <MenuItem value="Scheduled">Scheduled</MenuItem>
-                          <MenuItem value="Completed">Completed</MenuItem>
-                          <MenuItem value="Cancelled">Cancelled</MenuItem>
-                          <MenuItem value="Follow-up">Follow-up</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </td>
-                    <td style={{ textAlign: "center" }}>
-                      <IconButton
-                        onClick={() => handleDelete(s.id)}
-                        size="small"
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Box>
-          )}
-        </Paper>
-      </Box>
+            <IconButton onClick={() => handleDelete(index)}>
+              <DeleteIcon />
+            </IconButton>
+
+          </Box>
+
+        ))}
+
+      </Paper>
+
     </Box>
   );
-};
-
-export default AdminSessions;
+}
